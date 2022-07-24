@@ -261,7 +261,7 @@ class Sis3316(object):
         self._set_field(SIS3316_UDP_PROTOCOL_CONFIG, value, 0, 0xF)
 
     @property
-    def internal_trigger_feedback_select(self)
+    def internal_trigger_feedback_select(self):
         """ Requires `select_int_as_ext` flag
         Feed internal trigger back as external trigger to adc fpga        
         Allowed values: 0 [ch1] -- 15 [ch16]
@@ -270,7 +270,7 @@ class Sis3316(object):
         return value.bit_length()
     
     @internal_trigger_feedback_select.setter
-    def internal_trigger_feedback_select(self, value)
+    def internal_trigger_feedback_select(self, value):
         """ Requires `select_int_as_ext` flag
         Feed internal trigger back as external trigger to adc fpga        
         Allowed values: 0 [ch1] -- 15 [ch16]
