@@ -35,7 +35,8 @@ class Sis3316(object):
     __metaclass__ = ABCMeta # abstract class
 
     
-    _conf_params = [ 'freq', 'leds_mode', 'leds', 'clock_source', 'clock_multiplier', 'udp_transmit_gap', 'flags'] 
+    _conf_params = [ 'freq', 'leds_mode', 'leds', 'clock_source', 'clock_multiplier', 
+                    'udp_transmit_gap','internal_trigger_feedback_select', 'flags'] 
     _conf_flags = {
         'nim_ui_as_veto'     : Flag(12, SIS3316_NIM_INPUT_CONTROL_REG, "NIM Input UI as Veto Enable"),
         'nim_ui_function'    : Flag(11, SIS3316_NIM_INPUT_CONTROL_REG, "NIM Input UI Function"),
