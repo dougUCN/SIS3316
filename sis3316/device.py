@@ -35,7 +35,8 @@ class Sis3316(object):
     __metaclass__ = ABCMeta # abstract class
 
     
-    _conf_params = [ 'freq', 'leds_mode', 'leds', 'clock_source', 'clock_multiplier', 'udp_transmit_gap', 'flags'] 
+    _conf_params = [ 'freq', 'leds_mode', 'leds', 'clock_source', 'clock_multiplier', 
+                    'udp_transmit_gap','internal_trigger_feedback_select', 'flags'] 
     _conf_flags = {
         'nim_ui_as_veto'     : Flag(12, SIS3316_NIM_INPUT_CONTROL_REG, "NIM Input UI as Veto Enable"),
         'nim_ui_function'    : Flag(11, SIS3316_NIM_INPUT_CONTROL_REG, "NIM Input UI Function"),
@@ -48,6 +49,7 @@ class Sis3316(object):
         'nim_ti_ivert'        : Flag( 5, SIS3316_NIM_INPUT_CONTROL_REG, "NIM Input TI Invert"),
         'nim_ti_as_te'        : Flag( 4, SIS3316_NIM_INPUT_CONTROL_REG, "NIM Input TI as as Trigger Enable"),
         
+        'select_int_as_ext'    : Flag(14, SIS3316_ACQUISITION_CONTROL_STATUS, "Select internal trigger as external trigger enable"),
         'nim_ui_as_toggle'    : Flag(13, SIS3316_ACQUISITION_CONTROL_STATUS, "NIM UI signal as disarm Bank-X and arm alternate Bank."),
         'nim_ti_as_toggle'    : Flag(12, SIS3316_ACQUISITION_CONTROL_STATUS, "NIM TI signal as disarm Bank-X and arm alternate Bank."),
         'local_veto_ena'      : Flag(11, SIS3316_ACQUISITION_CONTROL_STATUS, "Enable local veto."),
@@ -258,6 +260,27 @@ class Sis3316(object):
         if value & ~0xF:
             raise ValueError("Takes an int [0..15]. See ethernet manual")
         self._set_field(SIS3316_UDP_PROTOCOL_CONFIG, value, 0, 0xF)
+
+    @property
+    def internal_trigger_feedback_select(self):
+        """ Requires `select_int_as_ext` flag
+        Feed internal trigger back as external trigger to adc fpga        
+        Allowed values: 0 [ch1] -- 15 [ch16]
+        """
+        value = self._get_field(SIS3316_INTERNAL_TRIGGER_FEEDBACK_SELECT_REG, 0, 0xffff)
+        return value.bit_length()
+    
+    @internal_trigger_feedback_select.setter
+    def internal_trigger_feedback_select(self, value):
+        """ Requires `select_int_as_ext` flag
+        Feed internal trigger back as external trigger to adc fpga        
+        Allowed values: 0 [ch1] -- 15 [ch16]
+        """
+        if value & ~0xF:
+            raise ValueError("Internal trigger must be 0 [ch1] -- 15 [ch16]")
+        self._set_field(SIS3316_INTERNAL_TRIGGER_FEEDBACK_SELECT_REG, 1 << value, 0, 0xffff)
+        
+
     
     @property
     def id(self):
@@ -391,6 +414,7 @@ class Sis3316(object):
         for grp in self.groups:
             grp.tap_delay_set()
         usleep(10)
+    
     
     @property
     def flags(self):
