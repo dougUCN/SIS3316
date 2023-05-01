@@ -1,0 +1,200 @@
+ A general implementation of sis3316 UPD-based protocol.
+    
+[4mProperties[0m: 
+[1mid[0m
+	 Module ID. 
+[1mserno[0m
+	 Serial No. 
+[1mhardwareVersion[0m
+	 H/W version. 
+[1mstatus[0m
+	 Status is True if everything is OK. 
+
+[4mMethods[0m: 
+[1mreset[0m
+	 Reset the registers to power-on state.
+[1mfire[0m
+	 Fire trigger. Don't forget to set 'extern_trig_ena' flag.
+[1mts_clear[0m
+	 Clear timestamp. Don't forget to set 'extern_ts_clr_ena' flag
+[1mread[0m
+	 Execute general read request with a single parameter. 
+[1mwrite[0m
+	None
+[1mread_list[0m
+	 Read a sequence of addresses at once. 
+[1mwrite_list[0m
+	 Write to a sequence of addresses at once. 
+
+[4mConfiguration properties[0m: 
+[1mfreq[0m
+	 Program clock oscillator (Silicon Labs Si570) via I2C bus. 
+[1mleds_mode[0m
+	 Get leds mode: manual/application-specific. 
+[1mleds[0m
+	 Get LEDs state. Returns 0 if LED is in application mode. 
+[1mclock_source[0m
+	  Sample Clock Multiplexer. 0->onboard, 1->VXS backplane, 2->FP bus, 3-> NIM (with multiplier) 
+[1mclock_multiplier[0m
+	 Program clock multiplier (SI5325) for use with external NIM clock source
+            Expected json format: "clock_multiplier":[{"CKIN1":MHz}, {"CKOUTX":MHz}]
+            where CKIN1 = NIM input freq and CKOUTX is desired clock freq
+[1mudp_transmit_gap[0m
+	 Gap time between udp transfer packets. Takes int [0..15]. See ethernet manual 
+[1mflags[0m
+	 A list of device configuration <flags>.
+
+[4m<flags>[0m: 
+[1mnim_ui_as_veto[0m
+	NIM Input UI as Veto Enable
+[1mnim_ui_function[0m
+	NIM Input UI Function
+[1mnim_ui_ls[0m
+	NIM Input UI Level sensitive
+[1mnim_ui_ivert[0m
+	NIM Input UI Invert
+[1mnim_ui_as_ts_clear[0m
+	NIM Input UI as Timestamp Clear Enable
+[1mnim_ti_function[0m
+	NIM Input TI Function
+[1mnim_ti_ls[0m
+	NIM Input TI Level sensitive
+[1mnim_ti_ivert[0m
+	NIM Input TI Invert
+[1mnim_ti_as_te[0m
+	NIM Input TI as as Trigger Enable
+[1mnim_ui_as_toggle[0m
+	NIM UI signal as disarm Bank-X and arm alternate Bank.
+[1mnim_ti_as_toggle[0m
+	NIM TI signal as disarm Bank-X and arm alternate Bank.
+[1mlocal_veto_ena[0m
+	Enable local veto.
+[1mextern_ts_clr_ena[0m
+	External timestamp clear enable.
+[1mtrig_as_veto[0m
+	Trigger as veto
+[1mextern_trig_ena[0m
+	Enable Key/External trigger.
+[1mjumbo_ena[0m
+	Enable Jumbo Frame for larger packets and faster read from daq
+
+ ADC GROUP 
+[4mProperties[0m: 
+[1mfirmware_version[0m
+	None
+[1mstatus[0m
+	None
+
+[4mConfiguration properties[0m: 
+[1menable[0m
+	 Enable/disable adc otput. 
+[1mscale[0m
+	 Set/get ADC input scale. Write to ADC chips via SPI. 
+[1maddr_threshold[0m
+	Doc.: The value will be compared with Actual Sample address counter (Bankx).
+		Given in 32-bit words !
+		
+[1mdelay[0m
+	The number of samples before the trigger to save to the memory. Max is 2042
+[1mdelay_extra_ena[0m
+	Turn on/off additional delay of FIR trigger (P+G).
+[1mgate1_chan_mask[0m
+	Which channels icluded in gate-1.
+[1mgate2_chan_mask[0m
+	Which channels icluded in gate-2.
+[1mgate_coinc_window[0m
+	Internal Coincidence Gate Length.
+[1mgate_intern_window[0m
+	Internal Gate Length.
+[1mgate_window[0m
+	 Doc.: The length of the Active Trigger Gate Window (2, 4, to 65536) 
+[1mmaw_delay[0m
+	The number of MAW samples before the trigger to save to MAW test biffer. 2 to 1022.
+[1mmaw_window[0m
+	MAW test buffer length. 0 to 1022.
+[1mpileup_window[0m
+	 The window to recognize event pileup.
+[1mrepileup_window[0m
+	 The window to recognize trigger pileup.
+[1mraw_start[0m
+	 The start index of the raw data buffer which will be copy to the memory. 
+[1mraw_window[0m
+	 The length of the raw data buffer which will be copy to the memory. 
+[1maccum1_start[0m
+	Accumulator-1 start index.
+[1maccum1_window[0m
+	Accumulator-1 length.
+[1maccum2_start[0m
+	Accumulator-2 start index.
+[1maccum2_window[0m
+	Accumulator-2 length.
+[1maccum3_start[0m
+	Accumulator-3 start index.
+[1maccum3_window[0m
+	Accumulator-3 length.
+[1maccum4_start[0m
+	Accumulator-4 start index.
+[1maccum4_window[0m
+	Accumulator-4 length.
+[1maccum5_start[0m
+	Accumulator-5 start index.
+[1maccum5_window[0m
+	Accumulator-5 length.
+[1maccum6_start[0m
+	Accumulator-6 start index.
+[1maccum6_window[0m
+	Accumulator-6 length.
+[1maccum7_start[0m
+	Accumulator-7 start index.
+[1maccum7_window[0m
+	Accumulator-7 length.
+[1maccum8_start[0m
+	Accumulator-8 start index.
+[1maccum8_window[0m
+	Accumulator-8 length.
+
+ADC CHANNEL
+[4mConfiguration properties[0m: 
+[1mevent_format_mask[0m
+	 Set event format field (accepts integer argument):
+                    [0b1]-> peak high and accum1..6, [0b10]-> accum7..8, [0b100]->MAW values, [0b1000]->Energy values
+                    Example: '12' = 0b1100 -> Both Energy and MAW values
+                    
+[1mevent_maw_ena[0m
+	 Save MAW test buffer in event. 
+[1mflags[0m
+	 Get/set channel flags (only all at once for certainty). 
+		The flags are listed in ch_flags attribute. 
+		
+[1mgain[0m
+	 Switch channel gain: 0->5V, 1->2V, 2->1.9V. 
+[1mintern_trig_delay[0m
+	 Delay of the internal trigger.
+[1mtermination[0m
+	 Swtich On/Off 50 Ohm terminator resistor on channel input. 
+
+[1mflags[0m
+	invert, intern_sum_trig, intern_trig, extern_trig, intern_gate1, intern_gate2, extern_gate, extern_veto
+
+ADC TRIGGER
+[4mConfiguration properties[0m: 
+[1mmaw_peaking_time[0m
+	 Peaking time: number of values to summ.
+[1mmaw_gap_time[0m
+	 Gap time (flat time).
+[1mout_pulse_length[0m
+	 External NIM out pulse length (stretched).
+[1mthreshold[0m
+	 Trapezoidal threshold value. 
+The full 27-bit running sum + 0x800 0000 is compared to this value to generate trigger.
+[1mcfd_ena[0m
+	 Enable CFD with 50%. 0,1 - disable, 2 -reserved, 3 -enabled.
+[1mhigh_suppress_ena[0m
+	A trigger will be suppressed if the running sum of the trapezoidal filter goes above the value of the High Energy Threshold register. 
+This mode works only with CFD function enabled ! 
+[1menable[0m
+	 Enable trigger. 
+[1mhigh_threshold[0m
+	 The full 27-bit running sum + 0x800 0000 is compared to the High Energy Suppress threshold value. 
+ Note 1: use channel invert for negative signals. 
+
