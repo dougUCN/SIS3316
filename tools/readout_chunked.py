@@ -9,10 +9,10 @@ per channel for split output files
 """
 
 import argparse
-import glob
 import io
 import os
 import sys
+from pathlib import Path
 from time import sleep
 
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
@@ -25,7 +25,7 @@ UNITS = {
     "KB": 1024,
     "B": 1,
 }
-OUTPATH = "data/raw-ch"  # Default output directory
+OUTPATH = "data/"  # Default output directory
 OUTEXT = ".dat"  # Default filename extension
 PORT = 3333  # Default UDP Port number
 
@@ -50,7 +50,7 @@ def readout_loop_with_file_chunking(
     """
     channel_info = {
         chan: {
-            "outpath": f"{outpath}{chan:02d}",
+            "outpath_prefix": f"{outpath}/ch{chan:02d}_",
             "chunk": 0,
             "total_bytes_received": 0,
             "bytes_in_current_file": 0,
@@ -107,7 +107,8 @@ def open_output_file(channel, channel_info):
         io.FileIO
     """
     return io.FileIO(
-        f"{channel_info[channel]['outpath']}_chunk{channel_info[channel]['chunk']}{OUTEXT}",
+        f"{channel_info[channel]['outpath_prefix']}"
+        f"_chunk{channel_info[channel]['chunk']}{OUTEXT}",
         mode="w",
     )
 
@@ -135,15 +136,6 @@ def sizeof_fmt(num, suffix="B"):
             return f"{num:3.1f} {unit}{suffix}"
         num /= 1024.0
     return f"{num:.1f} Ti{suffix}"
-
-
-def makedirs(path):
-    """Create directories for `path` (like 'mkdir -p')."""
-    if not path:
-        return
-    folder = os.path.dirname(path)
-    if folder and not os.path.exists(folder):
-        os.makedirs(folder)
 
 
 def main():
@@ -215,10 +207,10 @@ def main():
     max_file_size = args.max_file_size * UNITS[args.unit]
 
     outpath = args.output
-    makedirs(outpath)
+    Path(outpath).mkdir(parents=True, exist_ok=True)
 
     # check no overwrite
-    if glob.glob(f"{args.output}/*.{OUTEXT}"):
+    if list(Path(outpath).glob(f"*{OUTEXT}")):
         sys.stderr.write(
             f"{args.output}/*.{OUTEXT} files already exist!"
             " Not going to overwrite it.\n"
