@@ -537,7 +537,7 @@ class Sis3316(device.Sis3316, i2c.Sis3316, fifo.Sis3316, readout.Sis3316, clkMul
                     wfinished = bfinished//4
                 
             #end while
-            if wcwnd is 0:
+            if wcwnd == 0:
                 raise self._TimeoutExcept("many")
         
         #end while
