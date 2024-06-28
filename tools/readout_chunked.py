@@ -1,11 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-Read data from SIS3316. 
-Write raw (binary) data to files
+Read data from SIS3316. Write raw (binary) data to files
 
-Requires specification of apporx. max file size
-per channel for split output files
+Requires specification of approx. max file size per channel 
+for split output files (readout is prioritized over filesize limits)
 """
 
 import argparse
@@ -157,12 +156,16 @@ def main():
         help="UDP port number, default is %d" % PORT,
     )
     parser.add_argument(
-        "--max-file-size", type=int, required=True, help="Approximate file size max"
+        "--max-file-size",
+        type=int,
+        required=True,
+        help="Approximate file size max",
     )
     parser.add_argument(
         "--unit",
         type=str,
         choices=UNITS.keys(),
+        required=True,
         help=f"File size max unit",
     )
     parser.add_argument(
@@ -181,7 +184,7 @@ def main():
         type=str,
         metavar="PATH",
         default=OUTPATH,
-        help="a path for output, one file per channel." '\ndefault: "%s"' % OUTPATH,
+        help="Output file directory" '\ndefault: "%s"' % OUTPATH,
     )
     parser.add_argument(
         "-v", "--verbose", action="store_true", help="print info to std err"
