@@ -137,6 +137,14 @@ def sizeof_fmt(num, suffix="B"):
     return f"{num:.1f} Ti{suffix}"
 
 
+def check_filesize_unit(value):
+    if value not in UNITS.keys():
+        raise argparse.ArgumentTypeError(
+            f"Invalid unit. Expected one of: {list(UNITS.keys())}"
+        )
+    return value
+
+
 def main():
     # Defaults
     chunksize = 1024 * 1024  # how many bytes to request at once
@@ -157,16 +165,12 @@ def main():
     )
     parser.add_argument(
         "--max-file-size",
-        type=int,
+        nargs=2,
         required=True,
-        help="Approximate file size max",
-    )
-    parser.add_argument(
-        "--unit",
-        type=str,
-        choices=UNITS.keys(),
-        required=True,
-        help=f"File size max unit",
+        help="Approximate file size max (int) and its unit \n"
+        f"Valid units: {list(UNITS.keys())}",
+        metavar=("SIZE", "UNIT"),
+        type=lambda x: (int(x[0]), check_filesize_unit(x[1])),
     )
     parser.add_argument(
         "-c",
@@ -202,12 +206,11 @@ def main():
     channels = sorted(set(args.channels))  # deduplicate
 
     # --output
-    if not args.max_file_size > 0:
-        sys.stderr.write(
-            f"{args.max_file_size} {args.unit} is not a valid file size!\n"
-        )
+    file_size, file_size_unit = args.max_file_size
+    if not file_size > 0:
+        sys.stderr.write(f"{file_size} {file_size_unit} is not a valid file size!\n")
         exit(1)
-    max_file_size = args.max_file_size * UNITS[args.unit]
+    max_file_size = file_size * UNITS[args.file_size_unit]
 
     outpath = args.output
     Path(outpath).mkdir(parents=True, exist_ok=True)
