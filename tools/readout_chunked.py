@@ -27,6 +27,7 @@ UNITS = {
 OUTPATH = "data/"  # Default output directory
 OUTEXT = ".dat"  # Default filename extension
 PORT = 3333  # Default UDP Port number
+READOUT_PAUSE = 1 # [seconds] Delay between device readout calls
 
 
 def readout_loop_with_file_chunking(
@@ -89,7 +90,7 @@ def readout_loop_with_file_chunking(
                     channel_info[ch]["chunk"] += 1
                     channel_info[ch]["file_io"] = open_output_file(chan, channel_info)
 
-            sleep(1)
+            sleep(READOUT_PAUSE)
 
         except KeyboardInterrupt:
             sys.stderr.write("\n\n\n##### KeyboardInterrupt #####\n\n\n")
