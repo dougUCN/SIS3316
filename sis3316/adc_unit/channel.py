@@ -200,6 +200,19 @@ class Adc_channel(object):
         self.board._set_field(reg, bool(enable), offset, 0b1)
 
     @property
+    def event_maw_select(self):
+        """FIRF MAW (0) or Energy MAW (1)"""
+        reg = SIS3316_ADC_GRP(DATAFORMAT_CONFIG_REG, self.gid)
+        offset = 5 + 8 * self.cid
+        return self.board._get_field(reg, offset, 0b1)
+
+    @event_maw_ena.setter
+    def event_maw_select(self, enable):
+        reg = SIS3316_ADC_GRP(DATAFORMAT_CONFIG_REG, self.gid)
+        offset = 5 + 8 * self.cid
+        self.board._set_field(reg, bool(enable), offset, 0b1)
+
+    @property
     def event_format_mask(self):
         """Set event format field (accepts integer argument):
         [0b1]-> peak high and accum1..6, [0b10]-> accum7..8, [0b100]->MAW values, [0b1000]->Energy values
