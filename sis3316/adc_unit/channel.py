@@ -201,7 +201,7 @@ class Adc_channel(object):
 
     @property
     def event_maw_select(self):
-        """FIRF MAW (0) or Energy MAW (1)"""
+        """FIR MAW (0) or Energy MAW (1)"""
         reg = SIS3316_ADC_GRP(DATAFORMAT_CONFIG_REG, self.gid)
         offset = 5 + 8 * self.cid
         return self.board._get_field(reg, offset, 0b1)
