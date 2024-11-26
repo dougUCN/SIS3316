@@ -62,3 +62,6 @@ tools/data/
 
 # vim files
 *.swp
+
+# MacOS
+.DS_Store

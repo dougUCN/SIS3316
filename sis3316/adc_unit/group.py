@@ -88,7 +88,7 @@ class Adc_group(object):
 	def status(self):
 		stat = self.board.read(SIS3316_ADC_GRP(STATUS_REG, self.gid))
 		if stat not in (0x130018, 0x130118): # I think 0x130118 just means data link speed flag is up, and is therefore ok 
-                    return stat
+			return stat
 		return True
 	
 	
