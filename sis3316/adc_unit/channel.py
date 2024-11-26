@@ -40,6 +40,7 @@ class Adc_channel(object):
     _conf_params = [
         "event_format_mask",
         "event_maw_ena",
+        "event_maw_select",
         "flags",
         "gain",
         "intern_trig_delay",
